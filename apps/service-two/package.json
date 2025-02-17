@@ -1,0 +1,89 @@
+{
+  "name": "service-two",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
+    "lint": "eslint .",
+    "deploy": "AWS_PROFILE=matheus sls deploy",
+    "deploy:dev": "npm run deploy -- dev",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1548.0",
+    "axios": "1.7.9",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^16.4.1",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "uuid": "^11.0.5",
+    "@repo/logger": "*",
+    "@repo/http": "*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@types/aws-lambda": "^8.10.140",
+    "@types/jest": "^29.2.5",
+    "@types/node": "^20.11.16",
+    "esbuild": "0.24.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "standard-version": "^9.5.0",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "latest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "verbose": true,
+    "testMatch": [
+      "**/*.test.ts",
+      "**/*.spec.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/dist/"
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "clover"
+    ],
+    "coverageDirectory": "coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true
+    }
+  }
+}

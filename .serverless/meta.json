@@ -1,0 +1,27 @@
+{
+  "unknown": {
+    "versionFramework": "4.6.2",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": true,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "command": [
+      "login"
+    ],
+    "options": {},
+    "orgId": "6c558c8f-ad2a-45fe-aa1f-8fe03b559807",
+    "orgName": "matheusdev20",
+    "userId": "3bWShq3rfpdswHMSxh",
+    "userName": "matheusdev20",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}
