@@ -48,3 +48,6 @@ buzzmonitor.json
 csv1
 ## Remover depois
 tags
+
+.build
+.serverless

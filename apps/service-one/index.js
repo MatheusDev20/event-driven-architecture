@@ -1,12 +1,8 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-import { SNS } from 'aws-sdk';
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+const aws = require('aws-sdk');
 
-const sns = new SNS();
+const sns = new aws.SNS();
 
-export const handler = async (
-  event: APIGatewayProxyEvent,
-): Promise<APIGatewayProxyResult> => {
+const handler = async (event) => {
   const message = 'Hello from Service One!';
   const topicArn = process.env.SNS_TOPIC_ARN;
 
@@ -18,7 +14,7 @@ export const handler = async (
     };
   }
 
-  const params: SNS.PublishInput = {
+  const params = {
     Message: message,
     TopicArn: topicArn,
   };
@@ -38,3 +34,5 @@ export const handler = async (
     };
   }
 };
+
+module.exports = { handler };

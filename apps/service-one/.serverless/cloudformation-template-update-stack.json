@@ -2,6 +2,75 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "The AWS CloudFormation template for this Serverless application",
   "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "FirstDashserviceLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
@@ -90,10 +159,12 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "S3Bucket": "serverless-framework-deployments-us-east-1-d1052c61-b70f",
-          "S3Key": "serverless/service-one/dev/1739745427183-2025-02-16T22:37:07.183Z/service-one.zip"
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/service-one/dev/1739820447534-2025-02-17T19:27:27.534Z/service-one.zip"
         },
-        "Handler": "dist/index.js",
+        "Handler": "lambda.handler",
         "Runtime": "nodejs20.x",
         "FunctionName": "service-one-dev-first-service",
         "MemorySize": 1024,
@@ -114,14 +185,14 @@
         "FirstDashserviceLogGroup"
       ]
     },
-    "FirstDashserviceLambdaVersionOhrNc2a1pvNdyp0xrwv8SQTtBhsBq4hoQJBSy66Qtds": {
+    "FirstDashserviceLambdaVersionKiud6Ehrwvz6ZaxgBhIT1X1UdkHQ4gI6xiSNgEcEQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "FirstDashserviceLambdaFunction"
         },
-        "CodeSha256": "j4ezk8VlY3PKBKEyW3TxhFcwJsx0yXsq5jM0kOhLvtc="
+        "CodeSha256": "0Vz0yeY7tSJ7eHyU0Cmvq/HS4r2eirtf2LW/AcWQafU="
       }
     },
     "ApiGatewayRestApi": {
@@ -136,7 +207,7 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceHello": {
+    "ApiGatewayResourceTrigger": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
@@ -145,19 +216,19 @@
             "RootResourceId"
           ]
         },
-        "PathPart": "hello",
+        "PathPart": "trigger",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodHelloGet": {
+    "ApiGatewayMethodTriggerGet": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "GET",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceHello"
+          "Ref": "ApiGatewayResourceTrigger"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -197,7 +268,7 @@
         "FirstDashserviceLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1739745419946": {
+    "ApiGatewayDeployment1739820444719": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -206,7 +277,7 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodHelloGet"
+        "ApiGatewayMethodTriggerGet"
       ]
     },
     "FirstDashserviceLambdaPermissionApiGateway": {
@@ -249,7 +320,9 @@
   },
   "Outputs": {
     "ServerlessDeploymentBucketName": {
-      "Value": "serverless-framework-deployments-us-east-1-d1052c61-b70f",
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
       "Export": {
         "Name": "sls-service-one-dev-ServerlessDeploymentBucketName"
       }
@@ -257,7 +330,7 @@
     "FirstDashserviceLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "FirstDashserviceLambdaVersionOhrNc2a1pvNdyp0xrwv8SQTtBhsBq4hoQJBSy66Qtds"
+        "Ref": "FirstDashserviceLambdaVersionKiud6Ehrwvz6ZaxgBhIT1X1UdkHQ4gI6xiSNgEcEQ"
       },
       "Export": {
         "Name": "sls-service-one-dev-FirstDashserviceLambdaFunctionQualifiedArn"
