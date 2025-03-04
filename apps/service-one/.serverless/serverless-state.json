@@ -7,6 +7,19 @@
     "provider": {
       "name": "aws",
       "runtime": "nodejs20.x",
+      "iam": {
+        "role": {
+          "statements": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sns:Publish"
+              ],
+              "Resource": "arn:aws:sns:us-east-1:507754063151:event-driven-poc"
+            }
+          ]
+        }
+      },
       "stage": "dev",
       "region": "us-east-1",
       "versionFunctions": true,
@@ -146,6 +159,9 @@
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/service-one-dev*:*:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][0]"
                       }
                     ]
                   }
@@ -174,9 +190,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/service-one/dev/1739820447534-2025-02-17T19:27:27.534Z/service-one.zip"
+                "S3Key": "serverless/service-one/dev/1741048561472-2025-03-04T00:36:01.472Z/service-one.zip"
               },
-              "Handler": "lambda.handler",
+              "Handler": "index.handler",
               "Runtime": "nodejs20.x",
               "FunctionName": "service-one-dev-first-service",
               "MemorySize": 1024,
@@ -197,14 +213,14 @@
               "FirstDashserviceLogGroup"
             ]
           },
-          "FirstDashserviceLambdaVersionKiud6Ehrwvz6ZaxgBhIT1X1UdkHQ4gI6xiSNgEcEQ": {
+          "FirstDashserviceLambdaVersionlrNcnZf6OLcHCYme9GJ65mnBdolgu3X0qnKz5FRyLU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "FirstDashserviceLambdaFunction"
               },
-              "CodeSha256": "0Vz0yeY7tSJ7eHyU0Cmvq/HS4r2eirtf2LW/AcWQafU="
+              "CodeSha256": "phKt+a+TqjnC+IIRR2OFwf1lAKTJhsMhCEqp3hb28lA="
             }
           },
           "ApiGatewayRestApi": {
@@ -280,7 +296,7 @@
               "FirstDashserviceLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1739820444719": {
+          "ApiGatewayDeployment1741048558563": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -342,7 +358,7 @@
           "FirstDashserviceLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "FirstDashserviceLambdaVersionKiud6Ehrwvz6ZaxgBhIT1X1UdkHQ4gI6xiSNgEcEQ"
+              "Ref": "FirstDashserviceLambdaVersionlrNcnZf6OLcHCYme9GJ65mnBdolgu3X0qnKz5FRyLU"
             },
             "Export": {
               "Name": "sls-service-one-dev-FirstDashserviceLambdaFunctionQualifiedArn"
@@ -466,7 +482,7 @@
     "pluginsData": {},
     "functions": {
       "first-service": {
-        "handler": "lambda.handler",
+        "handler": "index.handler",
         "events": [
           {
             "http": "GET trigger"
@@ -481,7 +497,7 @@
         "timeout": 6,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "FirstDashserviceLambdaVersionKiud6Ehrwvz6ZaxgBhIT1X1UdkHQ4gI6xiSNgEcEQ"
+        "versionLogicalId": "FirstDashserviceLambdaVersionlrNcnZf6OLcHCYme9GJ65mnBdolgu3X0qnKz5FRyLU"
       }
     },
     "configValidationMode": "warn",
@@ -505,7 +521,7 @@
     "artifact": "/Users/matheusdepaula/projects/event-driven-pub-sub/apps/service-one/.serverless/service-one.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/service-one/dev/1739820447534-2025-02-17T19:27:27.534Z",
+    "artifactDirectoryName": "serverless/service-one/dev/1741048561472-2025-03-04T00:36:01.472Z",
     "artifact": "service-one.zip"
   }
 }

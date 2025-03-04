@@ -1,9 +1,19 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable turbo/no-undeclared-env-vars */
+/* eslint-disable no-undef */
+
 const aws = require('aws-sdk');
 
 const sns = new aws.SNS();
 
 const handler = async (event) => {
-  const message = 'Hello from Service One!';
+  const messages = [
+    { id: 1, text: 'Message 1 from Service One!' },
+    { id: 2, text: 'Message 2 from Service One!' },
+    { id: 3, text: 'Message 3 from Service One!' },
+  ];
+
   const topicArn = process.env.SNS_TOPIC_ARN;
 
   if (!topicArn) {
@@ -14,23 +24,27 @@ const handler = async (event) => {
     };
   }
 
-  const params = {
-    Message: message,
-    TopicArn: topicArn,
-  };
-
   try {
-    const result = await sns.publish(params).promise();
-    console.log('Message published to SNS:', result);
+    const publishPromises = messages.map((message) => {
+      const params = {
+        Message: JSON.stringify(message),
+        TopicArn: topicArn,
+      };
+
+      return sns.publish(params).promise();
+    });
+
+    const results = await Promise.all(publishPromises);
+    console.log('Messages published to SNS:', results);
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(results),
     };
   } catch (error) {
-    console.error('Error publishing message:', error);
+    console.error('Error publishing messages:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to publish message' }),
+      body: JSON.stringify({ error: 'Failed to publish messages' }),
     };
   }
 };
